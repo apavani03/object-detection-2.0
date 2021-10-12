@@ -1,5 +1,8 @@
 img = "";
 Status = "";
+detected_objects = [];
+var object_count = 0;
+
 
 function preload(){
  img = loadImage("girl_dog.jpg");
@@ -26,12 +29,31 @@ function gotResult(error, results){
     }
     else {
         console.log(results);
+        detected_objects = results;
+        object_count = detected_objects.length;
     }
     
 }
 
 function draw(){
 
+    if (Status != ""){
+        for(i=0; i < object_count; i++ ){
+            document.getElementById("status").innerHTML = "Status : Objects Detected";
+            console.log(detected_objects[i]);
+            object_name = detected_objects[i].label;
+            console.log(object_name);
+          
+            
+            accuracy = floor(detected_objects[i].confidence *100);
+            console.log(accuracy);
+            
+
+            x = detected_objects[i].x;
+            y = detected_objects[i].y;
+            W = detected_objects[i].width;
+            H = detected_objects[i].height;
+        }
     image(img,0,0,400,400);
    fill("#f9f753");
    text("girl",50,70);
