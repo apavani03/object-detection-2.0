@@ -1,33 +1,30 @@
 img = "";
-Load_Status = "";
+Status = "";
 detected_objects = [];
 var object_count = 0;
 
-function preload() {
-    img = loadImage("girl_dog.jpg");
+
+function preload(){
+ img = loadImage("girl_dog.jpg");
 }
 
-function setup() {
-    canvas = createCanvas(400, 400);
-    canvas.center();
-    detect_now = ml5.objectDetector("cocossd", modelLoaded);
-    video = createCapture(VIDEO);
-    video.hide();
+function setup(){
+canvas=createCanvas(400,400);
+canvas.center();
+detect_now = ml5.objectDetector("cocossd", modelLoaded);
 
+document.getElementById("status").innerHTML = "Status : Detecting Objects"
 
-    document.getElementById("status").innerHTML = "Status : Detecting Objects";
-    document.getElementById("number_of_objects").innerHTML = "Number of objects detected:0";
 }
 
-function modelLoaded() {
+function modelLoaded(){
     console.log("Model Loaded!");
-    Load_Status = true;
-   
+    Status = true;
+    detect_now.detect(img, gotResult); 
 }
+function gotResult(error, results){
 
-function gotResult(error, results) {
-
-    if (error) {
+    if (error){
         console.log(error);
     }
     else {
@@ -35,28 +32,14 @@ function gotResult(error, results) {
         detected_objects = results;
         object_count = detected_objects.length;
     }
-
+    
 }
 
-function draw() {
+function draw(){
 
-    image(video, 0, 0, 400, 400);
-
-    if (Load_Status != ""){
-        detect_now.detect(video, gotResult); // ml5.objectDetector("cocossd", modelLoaded).detect();
+    if (Status != ""){
         for(i=0; i < object_count; i++ ){
-
-            red_color = Math.floor(Math.random(0,255)*100);
-            blue_color = Math.floor(Math.random(0,255)*100);
-            green_color = Math.floor(Math.random(0,255)*100);
-
-            console.log("red color" + red_color);
-            console.log("blue color" + blue_color);
-            console.log("green color" + green_color);
-
             document.getElementById("status").innerHTML = "Status : Objects Detected";
-            document.getElementById("number_of_objects").innerHTML = "Number of objects detected : " + object_count;
-
             console.log(detected_objects[i]);
             object_name = detected_objects[i].label;
             console.log(object_name);
@@ -70,16 +53,18 @@ function draw() {
             y = detected_objects[i].y;
             W = detected_objects[i].width;
             H = detected_objects[i].height;
-
-            fill(red_color,green_color,blue_color);
-            text(object_name + " "+ accuracy + "%", x,y);
-            noFill();
-            stroke(red_color,green_color,blue_color);
-            rect(x,y,W,H);
-          
         }
     }
+    image(img,0,0,400,400);
+   fill("#f9f753");
+   text("girl",50,70);
+   noFill();
+   stroke("#e5ac00");
+    rect(30,60,300,300);
 
-   
-   
-}
+    fill("#f9f753");
+    text("dog",120,120);
+    noFill();
+   stroke("#e5ac00");
+   rect(100, 90, 300, 320 ); 
+}   
